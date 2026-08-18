@@ -78,7 +78,7 @@ export default function Quote() {
             <span className="sent-mark" aria-hidden="true">
               ✓
             </span>
-            <h2>Votre demande a bien été envoyée.</h2>
+            <h2>Votre demande a bien été envoyée</h2>
             <p>
               Merci. Un courriel vient d’être transmis à l’équipe BioAnlov. Nous communiquerons
               avec vous afin de convenir d’une visite de vos locaux.
