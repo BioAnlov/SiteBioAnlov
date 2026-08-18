@@ -62,7 +62,7 @@ export default function Sectors() {
     <>
       <PageHero
         eyebrow="Nos secteurs"
-        title="Un entretien adapté à chaque environnement."
+        title="Un entretien adapté à chaque environnement"
         text="Les méthodes et la fréquence sont établies selon l’usage réel de votre établissement."
       />
       <section className="content-section sector-list detailed-sectors">
