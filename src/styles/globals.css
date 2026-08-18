@@ -102,9 +102,11 @@
 .field-hint{display:block;margin-top:-2px;color:var(--muted);font-size:10px;font-weight:600;letter-spacing:.04em}
 @media(max-width:620px){.quote-sent{padding:34px 24px}}
 
-/* Geist Sans pour les sur-titres en majuscules */
-:root{--font-geist-sans:"Geist Variable"}
-.eyebrow{font-family:var(--font-geist-sans),system-ui,Arial,sans-serif}
+/* Système typographique : Georgia (titres), Geist Sans (texte), Geist Mono (numéros) */
+:root{--font-geist-sans:"Geist Variable";--font-geist-mono:"Geist Mono Variable"}
+body{font-family:var(--font-geist-sans),Arial,sans-serif}
+.quote-layout input,.quote-layout select,.quote-layout textarea{font-family:var(--font-geist-sans),Arial,sans-serif}
+.three-cards b,.process-grid b,.sector-list span{font-family:var(--font-geist-mono),ui-monospace,monospace}
 
 /* Menu principal plus lisible */
 .site-header nav{font-size:15px}
@@ -127,3 +129,23 @@
 .site-header.nav-open nav a{padding:14px 2px;border-bottom:1px solid var(--line);font-size:16px}
 .site-header.nav-open nav a:last-child{border-bottom:0}
 }
+
+/* Remontée générale des petites tailles de texte */
+.button{font-size:15px}
+.button-small{padding:12px 17px}
+.skip-link{font-size:14px}
+.eyebrow{font-size:12px}
+.three-cards b{font-size:13px}
+footer p{font-size:14px}
+footer>div{font-size:14px}
+footer>small{font-size:12px}
+.quote-layout label,.quote-options legend{font-size:12px}
+.quote-layout input,.quote-layout select,.quote-layout textarea{font-size:15px}
+.quote-options label{font-size:14px}
+.photo-note,.detailed-sectors .sector-note{font-size:13px}
+.detailed-services .service-intro,.detailed-sectors li{font-size:14px}
+.detailed-services .service-note{font-size:13px}
+.contact-grid small{font-size:11px}
+.contact-grid p{font-size:14px}
+.field-hint{font-size:11px}
+@media(max-width:620px){.site-header .button-small{padding:10px 12px;font-size:13px}}
