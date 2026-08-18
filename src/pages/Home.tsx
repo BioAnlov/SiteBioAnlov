@@ -45,7 +45,7 @@ export default function Home() {
             Entretien professionnel · Service personnalisé
           </p>
           <h1>
-            Des espaces propres, <em>sains</em> et accueillants.
+            Des espaces propres, <em>sains</em> et accueillants
           </h1>
           <p>
             BioAnlov prend soin de vos lieux avec rigueur, constance et une approche adaptée à
@@ -68,7 +68,7 @@ export default function Home() {
           <span />
           Nos secteurs
         </p>
-        <h2>Un service pensé pour votre milieu.</h2>
+        <h2>Un service pensé pour votre milieu</h2>
         <div className="three-cards">
           {sectorCards.map((card) => (
             <Link key={card.href} to={card.href}>
@@ -88,7 +88,7 @@ export default function Home() {
             <span />
             Notre engagement
           </p>
-          <h2>Une propreté qui se remarque.</h2>
+          <h2>Une propreté qui se remarque</h2>
           <p>Des méthodes claires, des tâches confirmées et un suivi de qualité constant.</p>
           <Link className="text-link" to="/a-propos">
             Découvrir BioAnlov →
