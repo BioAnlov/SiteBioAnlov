@@ -149,3 +149,21 @@ footer>small{font-size:12px}
 .contact-grid p{font-size:14px}
 .field-hint{font-size:11px}
 @media(max-width:620px){.site-header .button-small{padding:10px 12px;font-size:13px}}
+
+/* Bannières moins hautes (trop de vide autour du texte) */
+.home-hero{min-height:560px}
+.home-hero>div{padding:76px clamp(30px,7vw,110px)}
+.home-hero>img{min-height:560px}
+.page-hero{min-height:340px}
+.page-hero>div{padding:62px clamp(28px,7vw,110px)}
+.page-hero>img{min-height:340px}
+@media(max-width:1000px){.home-hero>img{min-height:300px}.page-hero>img{min-height:220px}}
+@media(max-width:620px){.home-hero>div,.page-hero>div{padding:44px 22px}.home-hero>img{min-height:240px}}
+
+/* Page Secteurs : encadré « Établissements desservis » et intertitres */
+.detailed-sectors .sector-establishments{margin:20px 0 26px;padding:24px 26px;background:#fff;border:1px solid var(--line);border-radius:5px}
+.detailed-sectors .sector-establishments h3,.detailed-sectors .zones-title{margin:0 0 15px;color:var(--green);font-family:var(--font-geist-sans),Arial,sans-serif;font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+.detailed-sectors .sector-establishments ul{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:13px 24px}
+.detailed-sectors .sector-establishments li{position:relative;padding-left:15px;color:var(--ink);font-size:14px}
+.detailed-sectors .sector-establishments li::before{content:"•";position:absolute;left:0;color:var(--gold);font-weight:700}
+.detailed-sectors ul.sector-zones{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:13px 24px}
