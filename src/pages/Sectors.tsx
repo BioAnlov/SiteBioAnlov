@@ -2,11 +2,27 @@ import { CTA } from "../components/CTA";
 import { PageHero } from "../components/PageHero";
 import { usePageMeta } from "../hooks/usePageMeta";
 
-const sectors = [
+type Sector = {
+  id: string;
+  title: string;
+  image: string;
+  establishments?: string[];
+  items: string[];
+  note: string;
+};
+
+const sectors: Sector[] = [
   {
     id: "bureaux",
     title: "Immeubles et bureaux",
     image: "/images/bureaux.webp",
+    establishments: [
+      "Édifices à bureaux",
+      "Édifices publics et parapublics",
+      "Petites et grandes entreprises",
+      "Immeubles en copropriété",
+      "OBNL",
+    ],
     items: [
       "Entrées et aires communes",
       "Corridors, escaliers et ascenseurs",
@@ -72,7 +88,18 @@ export default function Sectors() {
             <div>
               <span>0{index + 1}</span>
               <h2>{sector.title}</h2>
-              <ul>
+              {sector.establishments && (
+                <div className="sector-establishments">
+                  <h3>Établissements desservis</h3>
+                  <ul>
+                    {sector.establishments.map((place) => (
+                      <li key={place}>{place}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              <h3 className="zones-title">Zones entretenues</h3>
+              <ul className="sector-zones">
                 {sector.items.map((item) => (
                   <li key={item}>✓ {item}</li>
                 ))}
