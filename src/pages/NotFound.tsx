@@ -9,7 +9,7 @@ export default function NotFound() {
     <>
       <PageHero
         eyebrow="Erreur 404"
-        title="Cette page est introuvable."
+        title="Cette page est introuvable"
         text="Le lien est peut-être désuet ou la page a été déplacée. Revenez à l’accueil ou consultez nos services."
       />
       <section className="content-section">
