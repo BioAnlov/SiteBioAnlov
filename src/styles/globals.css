@@ -101,3 +101,29 @@
 .required-mark{color:#b4552e}
 .field-hint{display:block;margin-top:-2px;color:var(--muted);font-size:10px;font-weight:600;letter-spacing:.04em}
 @media(max-width:620px){.quote-sent{padding:34px 24px}}
+
+/* Geist Sans pour les sur-titres en majuscules */
+:root{--font-geist-sans:"Geist Variable"}
+.eyebrow{font-family:var(--font-geist-sans),system-ui,Arial,sans-serif}
+
+/* Menu principal plus lisible */
+.site-header nav{font-size:15px}
+
+/* Menu hamburger sur mobile (remplace le défilement horizontal) */
+.nav-toggle{display:none}
+@media(max-width:620px){
+.site-header{align-items:center;gap:12px}
+.nav-toggle{display:grid;place-items:center;width:42px;height:42px;flex:none;margin-left:auto;padding:0;border:1px solid var(--line);border-radius:6px;background:#fff;color:var(--green);cursor:pointer}
+.nav-toggle span{position:relative;display:block;width:19px;height:2px;background:currentColor}
+.nav-toggle span::before,.nav-toggle span::after{content:"";position:absolute;left:0;display:block;width:19px;height:2px;background:currentColor;transition:transform .18s ease}
+.nav-toggle span::before{top:-6px}
+.nav-toggle span::after{top:6px}
+.site-header .button-small{padding:10px 13px;font-size:12px}
+.site-header nav{display:none}
+.site-header.nav-open .nav-toggle span{background:transparent}
+.site-header.nav-open .nav-toggle span::before{transform:translateY(6px) rotate(45deg)}
+.site-header.nav-open .nav-toggle span::after{transform:translateY(-6px) rotate(-45deg)}
+.site-header.nav-open nav{display:flex;order:3;flex-direction:column;gap:0;width:100%;overflow-x:visible;margin-top:4px;padding:0;border-top:1px solid var(--line)}
+.site-header.nav-open nav a{padding:14px 2px;border-bottom:1px solid var(--line);font-size:16px}
+.site-header.nav-open nav a:last-child{border-bottom:0}
+}
