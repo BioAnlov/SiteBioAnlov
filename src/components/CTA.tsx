@@ -8,7 +8,7 @@ export function CTA() {
           <span />
           Parlons de vos besoins
         </p>
-        <h2>Votre soumission commence par une visite.</h2>
+        <h2>Votre soumission commence par une visite</h2>
       </div>
       <Link className="button light" to="/soumission">
         Demander une soumission →
