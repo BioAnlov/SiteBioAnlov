@@ -167,3 +167,20 @@ footer>small{font-size:12px}
 .detailed-sectors .sector-establishments li{position:relative;padding-left:15px;color:var(--ink);font-size:14px}
 .detailed-sectors .sector-establishments li::before{content:"•";position:absolute;left:0;color:var(--gold);font-weight:700}
 .detailed-sectors ul.sector-zones{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:13px 24px}
+
+/* Titres principaux plus compacts sur mobile */
+@media(max-width:620px){.home-hero h1,.page-hero h1{font-size:32px}}
+
+/* Page « Site en construction » (mode maintenance) */
+.maintenance{min-height:100vh;display:grid;place-items:center;padding:40px 22px;background:var(--cream)}
+.maintenance-card{width:100%;max-width:560px;padding:48px clamp(26px,5vw,54px);background:#fff;border:1px solid var(--line);border-radius:8px;box-shadow:0 18px 50px rgba(23,55,47,.07);text-align:center}
+.maintenance-card>img{display:block;width:auto;height:74px;margin:0 auto 26px}
+.maintenance .eyebrow{justify-content:center;margin:0 0 16px}
+.maintenance h1{margin:0 0 14px;font-size:clamp(27px,4vw,36px);line-height:1.2}
+.maintenance-lead{margin:0;color:var(--muted);font-size:17px;line-height:1.7}
+.maintenance-back{margin:10px 0 0;color:var(--green);font-size:14px;font-weight:700}
+.maintenance-contact{display:flex;justify-content:center;flex-wrap:wrap;gap:8px 26px;margin:30px 0;padding:22px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.maintenance-contact a{color:var(--green);font-size:16px;font-weight:700}
+.maintenance-contact a:hover{text-decoration:underline;text-underline-offset:5px}
+.maintenance .button{width:100%;max-width:310px}
+.maintenance-note{margin:26px 0 0;color:var(--muted);font-size:12px}
