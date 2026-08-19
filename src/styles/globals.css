@@ -101,3 +101,9 @@
 .required-mark{color:#b4552e}
 .field-hint{display:block;margin-top:-2px;color:var(--muted);font-size:10px;font-weight:600;letter-spacing:.04em}
 @media(max-width:620px){.quote-sent{padding:34px 24px}}
+
+/* Réseaux sociaux dans le pied de page */
+.footer-social{display:flex;align-items:center;gap:10px;margin-left:4px}
+.footer-social a{display:grid;place-items:center;width:34px;height:34px;border:1px solid var(--line);border-radius:50%;color:var(--green);background:#fff;transition:background .15s,color .15s,border-color .15s}
+.footer-social a:hover{background:var(--green);border-color:var(--green);color:#fff}
+.footer-social svg{display:block}
