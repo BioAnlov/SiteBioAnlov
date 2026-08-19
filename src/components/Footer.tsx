@@ -5,7 +5,7 @@ export function Footer() {
   return (
     <footer>
       <Link className="brand brand-logo footer-logo" to="/" aria-label="BioAnlov — Accueil">
-        <img src="/images/bioanlov-logo.png" alt="BioAnlov — Entretien ménager commercial" />
+        <img src="/images/bioanlov-logo-2026.png" alt="BioAnlov — Entretien ménager commercial" />
       </Link>
       <p>
         {site.tagline}
