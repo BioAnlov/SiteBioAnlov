@@ -21,7 +21,7 @@ export default function Maintenance() {
   return (
     <main className="maintenance">
       <div className="maintenance-card">
-        <img src="/images/bioanlov-logo.png" alt="BioAnlov — Entretien ménager commercial" />
+        <img src="/images/bioanlov-logo-2026.png" alt="BioAnlov — Entretien ménager commercial" />
         <p className="eyebrow">
           <span />
           Site en entretien
