@@ -6,6 +6,8 @@ export const site = {
   territory: "Île de Montréal, Laval, Lanaudière et Rive-Sud",
   hours: "Du lundi au vendredi, de 8 h à 17 h",
   tagline: "Immeubles et bureaux · CPE et garderies · Restaurants",
+  facebook: "https://www.facebook.com/share/19ESbh113j/",
+  instagram: "https://www.instagram.com/bioanlov.entretien",
 } as const;
 
 export const nav = [
