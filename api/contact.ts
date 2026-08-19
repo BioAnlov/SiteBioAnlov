@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { Resend } from "resend";
-import { escapeHtml, sendConfirmation } from "./_lib/email";
+import { escapeHtml, sendConfirmation } from "./_lib/email.js";
 
 /**
  * Réception du formulaire de contact et envoi du courriel via Resend.
