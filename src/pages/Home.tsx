@@ -33,7 +33,7 @@ const steps = [
 export default function Home() {
   usePageMeta(
     "BioAnlov — Entretien ménager commercial",
-    "Des espaces propres, sains et accueillants. BioAnlov prend soin de vos bureaux, CPE, garderies et restaurants avec rigueur et constance.",
+    "BioAnlov offre un entretien ménager commercial pour bureaux, immeubles, CPE, garderies et restaurants à Montréal, Laval, Lanaudière et sur la Rive-Sud.",
   );
 
   return (
