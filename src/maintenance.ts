@@ -8,7 +8,7 @@
  * Les textes ci-dessous se modifient librement.
  */
 export const maintenance = {
-  actif: true,
+  actif: false,
 
   /** Titre principal affiché en gros. */
   titre: "Notre site est temporairement en entretien",
