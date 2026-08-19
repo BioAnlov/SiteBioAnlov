@@ -1,5 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { Resend } from "resend";
+import { escapeHtml, sendConfirmation } from "./_lib/email";
 
 /**
  * Réception du formulaire de soumission et envoi du courriel via Resend.
@@ -99,15 +100,6 @@ function readPhotos(raw: unknown): { attachments: Attachment[]; names: string[];
   }
 
   return { attachments, names };
-}
-
-function escapeHtml(value: string): string {
-  return value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
 }
 
 function asText(value: unknown): string {
@@ -217,7 +209,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         .json({ error: "Le courriel n’a pas pu être envoyé. Veuillez réessayer." });
     }
 
-    return res.status(200).json({ ok: true, id: data?.id });
+    // Accusé de réception au visiteur : envoi distinct, dont l'échec ne remet
+    // pas en cause la notification déjà transmise à BioAnlov.
+    const confirmed = await sendConfirmation(resend, {
+      to: courriel,
+      from: FROM_EMAIL,
+      kind: "soumission",
+      name: asText(body.responsable),
+    });
+
+    return res.status(200).json({ ok: true, id: data?.id, confirmation: confirmed });
   } catch (err) {
     console.error("Erreur d’envoi :", err);
     return res.status(500).json({ error: "Une erreur interne est survenue. Veuillez réessayer." });
