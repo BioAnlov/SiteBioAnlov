@@ -41,6 +41,66 @@ const REQUIRED = [
 
 const MAX_LENGTH = 5000;
 
+/** Limites des pièces jointes, alignées sur `src/lib/photos.ts`. */
+const MAX_PHOTOS = 5;
+const MAX_PHOTO_BYTES = 5 * 1024 * 1024;
+const MAX_TOTAL_PHOTO_BYTES = 4 * 1024 * 1024;
+const ALLOWED_PHOTO_TYPES = new Set(["image/jpeg", "image/png"]);
+
+type Attachment = { filename: string; content: string };
+
+/** Retire tout chemin et ne garde que des caractères sûrs pour un nom de fichier. */
+function safeFileName(name: string, fallback: string): string {
+  const base = name.split(/[\\/]/).pop() || "";
+  const cleaned = base.replace(/[^\w.\- ]+/g, "").trim().slice(0, 80);
+  return cleaned && /\.[a-z0-9]+$/i.test(cleaned) ? cleaned : fallback;
+}
+
+/**
+ * Valide les photos reçues et les convertit en pièces jointes Resend.
+ * Une erreur retournée ici est destinée au visiteur.
+ */
+function readPhotos(raw: unknown): { attachments: Attachment[]; names: string[]; error?: string } {
+  if (raw === undefined || raw === null || raw === "") return { attachments: [], names: [] };
+  if (!Array.isArray(raw)) return { attachments: [], names: [], error: "Photos illisibles." };
+  if (raw.length > MAX_PHOTOS) {
+    return { attachments: [], names: [], error: `Maximum ${MAX_PHOTOS} photos.` };
+  }
+
+  const attachments: Attachment[] = [];
+  const names: string[] = [];
+  let total = 0;
+
+  for (const [index, entry] of raw.entries()) {
+    const photo = (entry ?? {}) as Record<string, unknown>;
+    const content = typeof photo.content === "string" ? photo.content : "";
+    const type = asText(photo.type);
+
+    if (!content) return { attachments: [], names: [], error: "Photos illisibles." };
+    if (!ALLOWED_PHOTO_TYPES.has(type)) {
+      return { attachments: [], names: [], error: "Seules les photos JPEG ou PNG sont acceptées." };
+    }
+
+    const bytes = Buffer.from(content, "base64");
+    if (bytes.length === 0) return { attachments: [], names: [], error: "Photos illisibles." };
+    if (bytes.length > MAX_PHOTO_BYTES) {
+      return { attachments: [], names: [], error: "Une photo dépasse la taille autorisée." };
+    }
+
+    total += bytes.length;
+    if (total > MAX_TOTAL_PHOTO_BYTES) {
+      return { attachments: [], names: [], error: "Les photos dépassent la taille totale permise." };
+    }
+
+    const extension = type === "image/png" ? "png" : "jpg";
+    const filename = safeFileName(asText(photo.name), `photo-${index + 1}.${extension}`);
+    attachments.push({ filename, content });
+    names.push(filename);
+  }
+
+  return { attachments, names };
+}
+
 function escapeHtml(value: string): string {
   return value
     .replace(/&/g, "&amp;")
@@ -87,11 +147,21 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(400).json({ error: "L’adresse courriel semble invalide." });
   }
 
+  const { attachments, names, error: photoError } = readPhotos(body.photos);
+  if (photoError) {
+    return res.status(400).json({ error: photoError });
+  }
+
   const rows = FIELDS.map((field) => {
     const raw = body[field.key];
     const value =
       field.type === "bool" ? (raw === true || raw === "true" ? "Oui" : "Non") : asText(raw);
     return { label: field.label, value: value || "—" };
+  });
+
+  rows.push({
+    label: "Photos jointes",
+    value: names.length ? `${names.length} — ${names.join(", ")}` : "—",
   });
 
   const entreprise = asText(body.entreprise);
@@ -137,6 +207,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       subject,
       text,
       html,
+      ...(attachments.length > 0 ? { attachments } : {}),
     });
 
     if (error) {
