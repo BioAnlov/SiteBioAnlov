@@ -22,7 +22,7 @@ export function Header() {
   return (
     <header className={open ? "site-header nav-open" : "site-header"}>
       <Link className="brand brand-logo" to="/" aria-label="BioAnlov — Accueil">
-        <img src="/images/bioanlov-logo.png" alt="BioAnlov — Entretien ménager commercial" />
+        <img src="/images/bioanlov-logo-2026.png" alt="BioAnlov — Entretien ménager commercial" />
       </Link>
       <button
         type="button"
