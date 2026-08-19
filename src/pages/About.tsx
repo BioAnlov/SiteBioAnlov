@@ -12,7 +12,7 @@ export default function About() {
     <>
       <PageHero
         eyebrow="À propos"
-        title="Une approche simple, transparente et bien encadrée."
+        title="Une approche simple, transparente et bien encadrée"
         text="BioAnlov offre un entretien ménager commercial fondé sur la constance, l’écoute et le respect de vos espaces."
         image="/images/garderie.webp"
       />
@@ -21,7 +21,7 @@ export default function About() {
           <p className="eyebrow">
             <span /> Qui sommes-nous
           </p>
-          <h2>Un service adapté à votre réalité.</h2>
+          <h2>Un service adapté à votre réalité</h2>
         </div>
         <div>
           <p>

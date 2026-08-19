@@ -70,7 +70,7 @@ export default function Services() {
     <>
       <PageHero
         eyebrow="Nos services"
-        title="Une base complète. Aucune zone oubliée."
+        title="Une base complète. Aucune zone oubliée"
         text="Chaque mandat est adapté à vos locaux, à votre horaire et à la fréquence souhaitée."
         image="/images/immeubles.webp"
         imageAlt="Immeuble commercial entretenu par BioAnlov"
