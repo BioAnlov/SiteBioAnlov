@@ -207,3 +207,13 @@ footer>small{font-size:12px}
 .photo-list button:hover{background:var(--green);border-color:var(--green);color:#fff}
 .photo-list button:disabled{opacity:.5;cursor:default}
 .photo-error{margin:2px 0 0;padding:11px 14px;border-left:3px solid #b4552e;border-radius:4px;background:#fdf1ec;color:#8d4021;font-size:13px;line-height:1.55}
+
+/* Formulaire de la page Contact — même habillage que celui de la soumission */
+.contact-form{align-items:start}
+.contact-form .quote-summary h2{margin:0 0 18px;font-size:clamp(32px,3.8vw,46px)}
+.contact-form form{border:1px solid var(--line);border-radius:7px;box-shadow:0 16px 45px rgba(23,55,47,.07)}
+/* Sur la soumission, les deux derniers champs sont pleine largeur ; ici, seuls
+   ceux marqués .full-field doivent l'être (.full-field n'est pas globale : elle
+   est scopée à .detailed-quote). */
+.contact-form .full-field{grid-column:1/-1}
+.contact-form form label:nth-last-of-type(2):not(.full-field){grid-column:auto}
