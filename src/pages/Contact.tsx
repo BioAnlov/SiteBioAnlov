@@ -62,67 +62,6 @@ export default function Contact() {
         text="Nous répondons à vos questions et planifions une visite de vos locaux."
         image="/images/restaurant.webp"
       />
-      <section className="content-section contact-details">
-        <div className="contact-grid">
-          <article>
-            <span aria-hidden="true">✉</span>
-            <small>Courriel</small>
-            <h2>
-              <a href={`mailto:${site.email}`}>{site.email}</a>
-            </h2>
-            <p>Écrivez-nous pour toute question concernant nos services.</p>
-          </article>
-          <article>
-            <span aria-hidden="true">☎</span>
-            <small>Téléphone</small>
-            <h2>
-              <a href={site.phoneHref}>{site.phone}</a>
-            </h2>
-            <p>Appelez-nous pour discuter de vos besoins ou planifier une visite.</p>
-          </article>
-          <article>
-            <span aria-hidden="true">⌖</span>
-            <small>Territoire desservi</small>
-            <h2>{site.territory}</h2>
-            <p>Les déplacements sont confirmés lors de la prise de rendez-vous.</p>
-          </article>
-          <article>
-            <span aria-hidden="true">◷</span>
-            <small>Heures de réponse</small>
-            <h2>{site.hours}</h2>
-            <p>
-              Les messages reçus à l’extérieur de ces heures seront traités le jour ouvrable
-              suivant.
-            </p>
-          </article>
-        </div>
-        <div className="contact-social">
-          <p>
-            <strong>Réseaux sociaux :</strong> suivez BioAnlov sur{" "}
-            <a href={site.facebook} target="_blank" rel="noopener noreferrer">
-              Facebook
-            </a>{" "}
-            et{" "}
-            <a href={site.instagram} target="_blank" rel="noopener noreferrer">
-              Instagram
-            </a>
-            .
-          </p>
-          <p>Vous pouvez également remplir directement le formulaire de soumission.</p>
-        </div>
-        <div className="contact-actions">
-          <a className="button" href={site.phoneHref}>
-            Appeler BioAnlov
-          </a>
-          <a className="button secondary-button" href={`mailto:${site.email}`}>
-            Écrire à BioAnlov
-          </a>
-          <Link className="button secondary-button" to="/soumission">
-            Demander une soumission
-          </Link>
-        </div>
-      </section>
-
       <section className="content-section quote-layout contact-form">
         <div className="quote-summary">
           <p className="eyebrow">
@@ -206,6 +145,64 @@ export default function Contact() {
             </button>
           </form>
         )}
+      </section>
+
+      <section className="content-section contact-details">
+        <div className="contact-grid">
+          <article>
+            <span aria-hidden="true">✉</span>
+            <small>Courriel</small>
+            <h2>
+              <a href={`mailto:${site.email}`}>{site.email}</a>
+            </h2>
+            <p>Écrivez-nous pour toute question concernant nos services.</p>
+          </article>
+          <article>
+            <span aria-hidden="true">☎</span>
+            <small>Téléphone</small>
+            <h2>
+              <a href={site.phoneHref}>{site.phone}</a>
+            </h2>
+            <p>Appelez-nous pour discuter de vos besoins ou planifier une visite.</p>
+          </article>
+          <article>
+            <span aria-hidden="true">⌖</span>
+            <small>Territoire desservi</small>
+            <h2>{site.territory}</h2>
+            <p>Les déplacements sont confirmés lors de la prise de rendez-vous.</p>
+          </article>
+          <article>
+            <span aria-hidden="true">◷</span>
+            <small>Heures de réponse</small>
+            <h2>{site.hours}</h2>
+            <p>
+              Les messages reçus à l’extérieur de ces heures seront traités le jour ouvrable
+              suivant.
+            </p>
+          </article>
+        </div>
+        <div className="contact-social">
+          <p>
+            <strong>Réseaux sociaux :</strong> suivez BioAnlov sur{" "}
+            <a href={site.facebook} target="_blank" rel="noopener noreferrer">
+              Facebook
+            </a>{" "}
+            et{" "}
+            <a href={site.instagram} target="_blank" rel="noopener noreferrer">
+              Instagram
+            </a>
+            .
+          </p>
+          <p>Vous pouvez également remplir directement le formulaire de soumission.</p>
+        </div>
+        <div className="contact-actions">
+          <a className="button" href={site.phoneHref}>
+            Appeler BioAnlov
+          </a>
+          <Link className="button secondary-button" to="/soumission">
+            Demander une soumission
+          </Link>
+        </div>
       </section>
     </>
   );
