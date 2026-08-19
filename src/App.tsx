@@ -7,8 +7,20 @@ import About from "./pages/About";
 import Quote from "./pages/Quote";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
+import Maintenance from "./pages/Maintenance";
+import { maintenance } from "./maintenance";
 
 export function App() {
+  // Mode maintenance : toutes les adresses affichent la page d'entretien.
+  // Les pages ci-dessous restent intactes et reviennent dès que `actif` repasse à false.
+  if (maintenance.actif) {
+    return (
+      <Routes>
+        <Route path="*" element={<Maintenance />} />
+      </Routes>
+    );
+  }
+
   return (
     <Routes>
       <Route element={<Layout />}>
