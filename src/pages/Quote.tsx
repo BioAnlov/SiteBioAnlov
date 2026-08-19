@@ -111,8 +111,9 @@ export default function Quote() {
             </span>
             <h2>Votre demande a bien été envoyée</h2>
             <p>
-              Merci. Un courriel vient d’être transmis à l’équipe BioAnlov. Nous communiquerons
-              avec vous afin de convenir d’une visite de vos locaux.
+              Merci. Votre demande vient d’être transmise à l’équipe BioAnlov et un accusé de
+              réception vous a été envoyé par courriel. Nous communiquerons avec vous dans un délai
+              de 1 à 2 jours ouvrables afin de convenir d’une visite de vos locaux.
             </p>
             <p>
               Les demandes sont traitées du lundi au vendredi, de 8 h à 17 h. Pour une question
