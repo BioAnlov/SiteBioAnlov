@@ -1,7 +1,16 @@
-import { useRef, useState, type FormEvent } from "react";
+import { useRef, useState, type ChangeEvent, type FormEvent } from "react";
 import { PageHero } from "../components/PageHero";
 import { usePageMeta } from "../hooks/usePageMeta";
 import { site } from "../data/site";
+import {
+  ACCEPTED_TYPES,
+  MAX_PHOTOS,
+  MAX_PHOTO_BYTES,
+  describeSize,
+  preparePhotos,
+  validateSelection,
+  type PreparedPhoto,
+} from "../lib/photos";
 
 type Status = "idle" | "sending" | "success" | "error";
 
@@ -14,15 +23,31 @@ export default function Quote() {
   const formRef = useRef<HTMLFormElement>(null);
   const [status, setStatus] = useState<Status>("idle");
   const [errorMessage, setErrorMessage] = useState("");
+  const [photos, setPhotos] = useState<File[]>([]);
+  const [photoError, setPhotoError] = useState("");
+
+  function handlePhotoChange(event: ChangeEvent<HTMLInputElement>) {
+    const { accepted, error } = validateSelection(photos, Array.from(event.target.files ?? []));
+    setPhotos(accepted);
+    setPhotoError(error);
+    // Vidé pour que le visiteur puisse rechoisir un fichier qu'il vient de retirer.
+    event.target.value = "";
+  }
+
+  function removePhoto(index: number) {
+    setPhotos((current) => current.filter((_, i) => i !== index));
+    setPhotoError("");
+  }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (status === "sending") return;
 
     const formData = new FormData(event.currentTarget);
-    const payload: Record<string, string | boolean> = {};
+    const payload: Record<string, string | boolean | PreparedPhoto[]> = {};
     for (const [key, value] of formData.entries()) {
-      payload[key] = typeof value === "string" ? value.trim() : "";
+      if (typeof value !== "string") continue;
+      payload[key] = value.trim();
     }
     payload.approvisionnement = formData.get("approvisionnement") === "on";
     payload.equipement = formData.get("equipement") === "on";
@@ -31,6 +56,10 @@ export default function Quote() {
     setErrorMessage("");
 
     try {
+      if (photos.length > 0) {
+        payload.photos = await preparePhotos(photos);
+      }
+
       const response = await fetch("/api/soumission", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -43,6 +72,8 @@ export default function Quote() {
       }
 
       formRef.current?.reset();
+      setPhotos([]);
+      setPhotoError("");
       setStatus("success");
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (error) {
@@ -203,10 +234,50 @@ export default function Quote() {
               style={{ position: "absolute", left: "-9999px", width: 1, height: 1, opacity: 0 }}
             />
 
-            <p className="photo-note full-field">
-              Vous pourrez transmettre des photos des lieux directement par courriel lorsque nous
-              communiquerons avec vous.
-            </p>
+            <div className="photo-field full-field">
+              <span className="photo-field-label">Photos des lieux</span>
+              <span className="field-hint">
+                Facultatif — JPEG ou PNG, jusqu’à {MAX_PHOTOS} photos de{" "}
+                {describeSize(MAX_PHOTO_BYTES)} chacune
+              </span>
+              <input
+                id="photos"
+                type="file"
+                accept={ACCEPTED_TYPES.join(",")}
+                multiple
+                onChange={handlePhotoChange}
+                disabled={status === "sending"}
+              />
+              <p className="photo-note">
+                Des photos de vos espaces nous aident à évaluer vos besoins avant la visite. Elles
+                sont jointes directement à votre demande.
+              </p>
+
+              {photos.length > 0 && (
+                <ul className="photo-list">
+                  {photos.map((photo, index) => (
+                    <li key={`${photo.name}-${photo.size}`}>
+                      <span className="photo-name">{photo.name}</span>
+                      <span className="photo-size">{describeSize(photo.size)}</span>
+                      <button
+                        type="button"
+                        onClick={() => removePhoto(index)}
+                        disabled={status === "sending"}
+                        aria-label={`Retirer ${photo.name}`}
+                      >
+                        Retirer
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+
+              {photoError && (
+                <p className="photo-error" role="alert">
+                  {photoError}
+                </p>
+              )}
+            </div>
 
             {status === "error" && (
               <p className="form-status error" role="alert">
