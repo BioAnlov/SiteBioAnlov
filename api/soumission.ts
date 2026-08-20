@@ -7,6 +7,33 @@ import { escapeHtml, sendConfirmation } from "./_lib/email.js";
  * Remplace l'ancien `mailto:` qui dépendait du client courriel du visiteur.
  */
 
+/**
+ * Limite de fréquence : 3 demandes par tranche de 10 minutes et par adresse IP.
+ * Le compteur vit en mémoire de l'instance ; il freine les rafales, sans
+ * remplacer un vrai stockage partagé (voir README).
+ */
+const FENETRE_MS = 10 * 60 * 1000;
+const MAX_DEMANDES = 3;
+const historique = new Map<string, number[]>();
+
+function adresseIp(req: VercelRequest): string {
+  const entete = req.headers["x-forwarded-for"];
+  const brut = Array.isArray(entete) ? entete[0] : entete;
+  return (brut?.split(",")[0] || req.socket?.remoteAddress || "inconnue").trim();
+}
+
+function tropDeDemandes(ip: string): boolean {
+  const maintenant = Date.now();
+  const recentes = (historique.get(ip) || []).filter((t) => maintenant - t < FENETRE_MS);
+  if (recentes.length >= MAX_DEMANDES) {
+    historique.set(ip, recentes);
+    return true;
+  }
+  recentes.push(maintenant);
+  historique.set(ip, recentes);
+  return false;
+}
+
 const TO_EMAIL = process.env.QUOTE_TO_EMAIL || "info@bioanlov.com";
 const FROM_EMAIL = process.env.QUOTE_FROM_EMAIL || "BioAnlov <onboarding@resend.dev>";
 
@@ -114,6 +141,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(405).json({ error: "Méthode non autorisée." });
   }
 
+  if (tropDeDemandes(adresseIp(req))) {
+    return res.status(429).json({
+      error: "Trop de demandes envoyées. Veuillez patienter quelques minutes ou nous téléphoner.",
+    });
+  }
+
   if (!process.env.RESEND_API_KEY) {
     console.error("RESEND_API_KEY manquante dans les variables d'environnement.");
     return res
@@ -127,6 +160,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Champ piège : s'il est rempli, la demande vient d'un robot.
   if (asText(body.siteWeb)) {
     return res.status(200).json({ ok: true });
+  }
+
+  // Question anti-robot : la réponse doit correspondre aux deux nombres affichés.
+  const a = Number(asText(body.antiRobotA));
+  const b = Number(asText(body.antiRobotB));
+  const reponse = Number(asText(body.antiRobot));
+  if (!Number.isFinite(a) || !Number.isFinite(b) || reponse !== a + b) {
+    return res.status(400).json({ error: "La réponse à la question anti-robot est incorrecte." });
   }
 
   const missing = REQUIRED.filter((key) => !asText(body[key]));
