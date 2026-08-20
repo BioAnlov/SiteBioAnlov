@@ -2,6 +2,7 @@ import { useRef, useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
 import { PageHero } from "../components/PageHero";
 import { usePageMeta } from "../hooks/usePageMeta";
+import { MESSAGE_ANTI_ROBOT, useAntiRobot } from "../components/AntiRobot";
 import { site } from "../data/site";
 
 type Status = "idle" | "sending" | "success" | "error";
@@ -13,6 +14,7 @@ export default function Contact() {
   );
 
   const formRef = useRef<HTMLFormElement>(null);
+  const antiRobot = useAntiRobot();
   const [status, setStatus] = useState<Status>("idle");
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -26,6 +28,13 @@ export default function Contact() {
       if (typeof value !== "string") continue;
       payload[key] = value.trim();
     }
+
+    if (!antiRobot.verifier(payload.antiRobot)) {
+      setStatus("error");
+      setErrorMessage(MESSAGE_ANTI_ROBOT);
+      return;
+    }
+    Object.assign(payload, antiRobot.nombres);
 
     setStatus("sending");
     setErrorMessage("");
@@ -43,6 +52,7 @@ export default function Contact() {
       }
 
       formRef.current?.reset();
+      antiRobot.renouveler();
       setStatus("success");
     } catch (error) {
       setStatus("error");
@@ -130,6 +140,8 @@ export default function Contact() {
               aria-hidden="true"
               style={{ position: "absolute", left: "-9999px", width: 1, height: 1, opacity: 0 }}
             />
+
+            {antiRobot.champ}
 
             {status === "error" && (
               <p className="form-status error" role="alert">
