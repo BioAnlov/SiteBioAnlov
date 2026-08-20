@@ -2,6 +2,7 @@ import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { Resend } from "resend";
 import { escapeHtml, sendConfirmation } from "./_lib/email.js";
 import { creerLimite } from "./_lib/limite.js";
+import { MESSAGE_ANTI_ROBOT, reponseAntiRobotValide } from "./_lib/antiRobot.js";
 
 /**
  * Réception du formulaire de soumission et envoi du courriel via Resend.
@@ -139,12 +140,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(200).json({ ok: true });
   }
 
-  // Question anti-robot : la réponse doit correspondre aux deux nombres affichés.
-  const a = Number(asText(body.antiRobotA));
-  const b = Number(asText(body.antiRobotB));
-  const reponse = Number(asText(body.antiRobot));
-  if (!Number.isFinite(a) || !Number.isFinite(b) || reponse !== a + b) {
-    return res.status(400).json({ error: "La réponse à la question anti-robot est incorrecte." });
+  if (!reponseAntiRobotValide(body)) {
+    return res.status(400).json({ error: MESSAGE_ANTI_ROBOT });
   }
 
   const missing = REQUIRED.filter((key) => !asText(body[key]));
