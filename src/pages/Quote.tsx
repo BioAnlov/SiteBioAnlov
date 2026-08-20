@@ -1,6 +1,7 @@
 import { useRef, useState, type ChangeEvent, type FormEvent } from "react";
 import { PageHero } from "../components/PageHero";
 import { usePageMeta } from "../hooks/usePageMeta";
+import { MESSAGE_ANTI_ROBOT, useAntiRobot } from "../components/AntiRobot";
 import { site } from "../data/site";
 import {
   ACCEPTED_TYPES,
@@ -14,11 +15,6 @@ import {
 
 type Status = "idle" | "sending" | "success" | "error";
 
-/** Tire deux nombres simples pour la question anti-robot. */
-function nouveauCalcul() {
-  return { a: 1 + Math.floor(Math.random() * 8), b: 1 + Math.floor(Math.random() * 8) };
-}
-
 export default function Quote() {
   usePageMeta(
     "Demande de soumission — BioAnlov",
@@ -26,8 +22,7 @@ export default function Quote() {
   );
 
   const formRef = useRef<HTMLFormElement>(null);
-  // Question anti-robot : deux nombres tirés au chargement, renouvelés après chaque envoi.
-  const [calcul, setCalcul] = useState(nouveauCalcul);
+  const antiRobot = useAntiRobot();
   const [status, setStatus] = useState<Status>("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const [photos, setPhotos] = useState<File[]>([]);
@@ -59,15 +54,12 @@ export default function Quote() {
     payload.approvisionnement = formData.get("approvisionnement") === "on";
     payload.equipement = formData.get("equipement") === "on";
 
-    // Vérification anti-robot côté navigateur.
-    const reponse = Number(String(payload.antiRobot ?? "").trim());
-    if (reponse !== calcul.a + calcul.b) {
+    if (!antiRobot.verifier(payload.antiRobot)) {
       setStatus("error");
-      setErrorMessage("La réponse à la question anti-robot est incorrecte.");
+      setErrorMessage(MESSAGE_ANTI_ROBOT);
       return;
     }
-    payload.antiRobotA = String(calcul.a);
-    payload.antiRobotB = String(calcul.b);
+    Object.assign(payload, antiRobot.nombres);
 
     setStatus("sending");
     setErrorMessage("");
@@ -91,7 +83,7 @@ export default function Quote() {
       formRef.current?.reset();
       setPhotos([]);
       setPhotoError("");
-      setCalcul(nouveauCalcul());
+      antiRobot.renouveler();
       setStatus("success");
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (error) {
@@ -298,21 +290,7 @@ export default function Quote() {
               )}
             </div>
 
-            <label className="anti-robot full-field">
-              Question anti-robot : combien font {calcul.a} + {calcul.b} ?{" "}
-              <span className="required-mark">*</span>
-              <input
-                type="text"
-                name="antiRobot"
-                inputMode="numeric"
-                autoComplete="off"
-                required
-                placeholder="Votre réponse"
-              />
-              <small className="field-hint">
-                Cette question nous protège des envois automatisés.
-              </small>
-            </label>
+            {antiRobot.champ}
 
             {status === "error" && (
               <p className="form-status error" role="alert">
