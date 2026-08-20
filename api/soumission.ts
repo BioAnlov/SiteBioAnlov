@@ -1,38 +1,15 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { Resend } from "resend";
 import { escapeHtml, sendConfirmation } from "./_lib/email.js";
+import { creerLimite } from "./_lib/limite.js";
 
 /**
  * Réception du formulaire de soumission et envoi du courriel via Resend.
  * Remplace l'ancien `mailto:` qui dépendait du client courriel du visiteur.
  */
 
-/**
- * Limite de fréquence : 3 demandes par tranche de 10 minutes et par adresse IP.
- * Le compteur vit en mémoire de l'instance ; il freine les rafales, sans
- * remplacer un vrai stockage partagé (voir README).
- */
-const FENETRE_MS = 10 * 60 * 1000;
-const MAX_DEMANDES = 3;
-const historique = new Map<string, number[]>();
-
-function adresseIp(req: VercelRequest): string {
-  const entete = req.headers["x-forwarded-for"];
-  const brut = Array.isArray(entete) ? entete[0] : entete;
-  return (brut?.split(",")[0] || req.socket?.remoteAddress || "inconnue").trim();
-}
-
-function tropDeDemandes(ip: string): boolean {
-  const maintenant = Date.now();
-  const recentes = (historique.get(ip) || []).filter((t) => maintenant - t < FENETRE_MS);
-  if (recentes.length >= MAX_DEMANDES) {
-    historique.set(ip, recentes);
-    return true;
-  }
-  recentes.push(maintenant);
-  historique.set(ip, recentes);
-  return false;
-}
+/** Limite de fréquence : 3 demandes par tranche de 10 minutes et par adresse IP. */
+const tropDeDemandes = creerLimite();
 
 const TO_EMAIL = process.env.QUOTE_TO_EMAIL || "info@bioanlov.com";
 const FROM_EMAIL = process.env.QUOTE_FROM_EMAIL || "BioAnlov <onboarding@resend.dev>";
@@ -141,7 +118,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(405).json({ error: "Méthode non autorisée." });
   }
 
-  if (tropDeDemandes(adresseIp(req))) {
+  if (tropDeDemandes(req)) {
     return res.status(429).json({
       error: "Trop de demandes envoyées. Veuillez patienter quelques minutes ou nous téléphoner.",
     });
