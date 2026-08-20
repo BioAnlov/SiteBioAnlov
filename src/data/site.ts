@@ -1,6 +1,13 @@
+/**
+ * L'adresse est assemblée à l'exécution : la chaîne complète n'apparaît jamais
+ * telle quelle dans les fichiers livrés, ce qui la rend invisible aux robots
+ * qui parcourent le code à la recherche de courriels à revendre.
+ */
+const courriel = ["info", "bioanlov.com"].join("@");
+
 export const site = {
   name: "BioAnlov",
-  email: "info@bioanlov.com",
+  email: courriel,
   phone: "(514) 447-4195",
   phoneHref: "tel:+15144474195",
   territory: "Île de Montréal, Laval, Lanaudière et Rive-Sud",
