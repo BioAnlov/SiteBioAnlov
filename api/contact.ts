@@ -2,6 +2,7 @@ import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { Resend } from "resend";
 import { escapeHtml, sendConfirmation } from "./_lib/email.js";
 import { creerLimite } from "./_lib/limite.js";
+import { MESSAGE_ANTI_ROBOT, reponseAntiRobotValide } from "./_lib/antiRobot.js";
 
 /**
  * Réception du formulaire de contact et envoi du courriel via Resend.
@@ -55,6 +56,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Champ piège : s'il est rempli, le message vient d'un robot.
   if (asText(body.siteWeb)) {
     return res.status(200).json({ ok: true });
+  }
+
+  if (!reponseAntiRobotValide(body)) {
+    return res.status(400).json({ error: MESSAGE_ANTI_ROBOT });
   }
 
   const missing = REQUIRED.filter((key) => !asText(body[key]));
