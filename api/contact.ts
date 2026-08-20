@@ -1,11 +1,15 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { Resend } from "resend";
 import { escapeHtml, sendConfirmation } from "./_lib/email.js";
+import { creerLimite } from "./_lib/limite.js";
 
 /**
  * Réception du formulaire de contact et envoi du courriel via Resend.
  * Même principe que `soumission.ts`, avec moins de champs.
  */
+
+/** Limite de fréquence : 3 messages par tranche de 10 minutes et par adresse IP. */
+const tropDeDemandes = creerLimite();
 
 const TO_EMAIL = process.env.QUOTE_TO_EMAIL || "info@bioanlov.com";
 const FROM_EMAIL = process.env.QUOTE_FROM_EMAIL || "BioAnlov <onboarding@resend.dev>";
@@ -30,6 +34,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== "POST") {
     res.setHeader("Allow", "POST");
     return res.status(405).json({ error: "Méthode non autorisée." });
+  }
+
+  if (tropDeDemandes(req)) {
+    return res.status(429).json({
+      error: "Trop de messages envoyés. Veuillez patienter quelques minutes ou nous téléphoner.",
+    });
   }
 
   if (!process.env.RESEND_API_KEY) {
