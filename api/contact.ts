@@ -9,8 +9,8 @@ import { MESSAGE_ANTI_ROBOT, reponseAntiRobotValide } from "./_lib/antiRobot.js"
  * Même principe que `soumission.ts`, avec moins de champs.
  */
 
-/** Limite de fréquence : 3 messages par tranche de 10 minutes et par adresse IP. */
-const tropDeDemandes = creerLimite();
+/** Limite de fréquence : 3 messages transmis par tranche de 10 minutes et par adresse IP. */
+const limite = creerLimite();
 
 const TO_EMAIL = process.env.QUOTE_TO_EMAIL || "info@bioanlov.com";
 const FROM_EMAIL = process.env.QUOTE_FROM_EMAIL || "BioAnlov <onboarding@resend.dev>";
@@ -37,7 +37,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(405).json({ error: "Méthode non autorisée." });
   }
 
-  if (tropDeDemandes(req)) {
+  if (limite.bloque(req)) {
     return res.status(429).json({
       error: "Trop de messages envoyés. Veuillez patienter quelques minutes ou nous téléphoner.",
     });
@@ -128,6 +128,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         .status(502)
         .json({ error: "Le message n’a pas pu être envoyé. Veuillez réessayer." });
     }
+
+    // Le message est parti : c'est maintenant qu'il compte dans le quota.
+    limite.enregistrer(req);
 
     // Accusé de réception au visiteur : envoi distinct, dont l'échec ne remet
     // pas en cause la notification déjà transmise à BioAnlov.
