@@ -217,3 +217,7 @@ footer>small{font-size:12px}
    est scopée à .detailed-quote). */
 .contact-form .full-field{grid-column:1/-1}
 .contact-form form label:nth-last-of-type(2):not(.full-field){grid-column:auto}
+
+/* Question anti-robot du formulaire de soumission */
+.quote-layout label.anti-robot{padding:18px 20px;background:var(--mist);border-radius:5px;text-transform:none;letter-spacing:0;font-size:14px;font-weight:700;color:var(--ink)}
+.quote-layout label.anti-robot input{max-width:190px;background:#fff}
